@@ -51,11 +51,13 @@ def extract_food_truck_info():
                 'Rating': details.get('rating'),
                 'Website':gmaps.place(details['place_id'])["result"].get("website"),
                 'Opening Hours': ", ".join(gmaps.place(details['place_id'])["result"].get("opening_hours", {}).get("weekday_text", [])),
-                'Cuisine Type': get_cuisine_from_yelp(details['name'])
+                'Cuisine Type': get_cuisine_from_yelp(details['name']),
+                'Latitude': details['geometry']['location']['lat'],
+                'Longitude': details['geometry']['location']['lng']
             }
             for details in search_results
         ]
-        pd.DataFrame(places, columns=['Name', 'Address', 'Rating', 'Website', 'Opening Hours', 'Cuisine Type']).to_csv("food_trucks.csv", index=False)
+        pd.DataFrame(places, columns=['Name', 'Address', 'Rating', 'Website', 'Opening Hours', 'Cuisine Type','Latitude','Longitude']).to_csv("food_trucks.csv", index=False)
     except googlemaps.exceptions.ApiError as e:
         print(f"API error: {e}")
     except googlemaps.exceptions.HTTPError as e:
